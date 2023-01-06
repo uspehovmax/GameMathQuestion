@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import ru.uspehovmax.composition.R
 import ru.uspehovmax.composition.databinding.FragmentChooseLevelBinding
 import ru.uspehovmax.composition.domain.entity.Level
 
-class ChooseLevelFragment: Fragment() {
+class ChooseLevelFragment : Fragment() {
 
     private var _binding: FragmentChooseLevelBinding? = null
     private val binding: FragmentChooseLevelBinding
@@ -17,7 +18,9 @@ class ChooseLevelFragment: Fragment() {
 
     companion object {
         const val NAME = "ChooseLevelFragment"
-        fun newInstance(): ChooseLevelFragment{
+
+        // вместо newInstance используются safeargs для передачи данных
+        fun newInstance(): ChooseLevelFragment {
             return ChooseLevelFragment()
         }
     }
@@ -59,10 +62,23 @@ class ChooseLevelFragment: Fragment() {
     }
 
     private fun launchGameFragment(level: Level) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance(level))
-            .addToBackStack(GameFragment.NAME)
-            .commit()
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.main_container, GameFragment.newInstance(level))
+//            .addToBackStack(GameFragment.NAME)
+//            .commit()
+        // поменяли. на navigate
+        // Для передачи level используем args = Bundle()
+//        val args = Bundle().apply {
+//            putParcelable(GameFragment.KEY_LEVEL, level)
+//        }
+//          передача арргументов через safeargs
+//        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment, args)
+        findNavController().navigate(
+            ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(
+                level
+            )
+        )
+
     }
 
     override fun onDestroyView() {

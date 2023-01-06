@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import ru.uspehovmax.composition.R
 import ru.uspehovmax.composition.databinding.FragmentGameFinishedBinding
 import ru.uspehovmax.composition.domain.entity.GameResult
@@ -29,8 +30,9 @@ class GameFinishedFragment: Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentGameFinishedBinding == null")
 
     companion object {
-        private const val KEY_GAME_RESULT = "game_result"
+        const val KEY_GAME_RESULT = "game_result"
 
+        // вместо newInstance используются safeargs для передачи данных
         fun newInstance(gameResult: GameResult): GameFinishedFragment{
             return GameFinishedFragment().apply{
                 arguments = Bundle().apply {
@@ -48,12 +50,13 @@ class GameFinishedFragment: Fragment() {
          requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
              gameResult = it
          }
-
     }
 
     // запуск выбора фрагмента GameFragment
     private fun retryGame() {
-        requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//        requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        // замена на navigate
+        findNavController().popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,12 +120,14 @@ class GameFinishedFragment: Fragment() {
 
     private fun setupClickListeners() {
         // на экране GameFinishedFragment слушатель нажатия кнопки "назад"
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        // замена navigate
+//        val callback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                retryGame()
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         // слушатель нажатия "Попробовать снова"
         binding.buttonRetry.setOnClickListener {
             retryGame()

@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ru.uspehovmax.composition.R
 import ru.uspehovmax.composition.data.GameRepositoryImpl
 import ru.uspehovmax.composition.databinding.FragmentGameBinding
@@ -18,9 +20,12 @@ import ru.uspehovmax.composition.domain.usecase.GetGamesSettingsUseCase
 
 class GameFragment : Fragment() {
 
-    private lateinit var level: Level
+    private val args by navArgs<GameFragmentArgs>()
+    // удаляем , navigate
+//    private lateinit var level: Level
     private val viewModelFactory by lazy {
-        GameViewModelFactory(requireActivity().application, level)
+//        val args = GameFragmentArgs.fromBundle(requireArguments())
+        GameViewModelFactory(requireActivity().application, args.level)
     }
     //    private lateinit var viewModel: GameViewModel
     // или ленивая иницциализация. Не пишем в onViewCreated
@@ -48,7 +53,8 @@ class GameFragment : Fragment() {
 
     companion object {
         const val NAME = "GameFragment"
-        private const val KEY_LEVEL = "level"
+        const val KEY_LEVEL = "level"
+        // вместо newInstance используются safeargs для передачи данных
         fun newInstance(level: Level): GameFragment {
             return GameFragment().apply {
                 arguments = Bundle().apply {
@@ -60,16 +66,18 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun parseArgs() {
-//        level = requireArguments().getSerializable(KEY_LEVEL) as Level
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
+    // удаляем , navigate
+//    private fun parseArgs() {
+////        level = requireArguments().getSerializable(KEY_LEVEL) as Level
+//        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
+//            level = it
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArgs()
+        // удаляем , navigate
+//        parseArgs()
     }
 
     override fun onCreateView(
@@ -159,10 +167,16 @@ class GameFragment : Fragment() {
     }
 
     private fun launchGameFinishedFragment(gameResult: GameResult) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
-            .addToBackStack(null)
-            .commit()
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
+//            .addToBackStack(null)
+//            .commit()
+        // поменяли. на navigate
+        // Для передачи gameResult используем args = Bundle()
+        val args = Bundle().apply {
+            putParcelable(GameFinishedFragment.KEY_GAME_RESULT, gameResult)
+        }
+        findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, args)
     }
 
 }
