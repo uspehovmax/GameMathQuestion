@@ -21,19 +21,19 @@ import ru.uspehovmax.composition.domain.usecase.GetGamesSettingsUseCase
 class GameFragment : Fragment() {
 
     private val args by navArgs<GameFragmentArgs>()
-    // удаляем , navigate
-//    private lateinit var level: Level
-    private val viewModelFactory by lazy {
-//        val args = GameFragmentArgs.fromBundle(requireArguments())
-        GameViewModelFactory(requireActivity().application, args.level)
-    }
     //    private lateinit var viewModel: GameViewModel
     // или ленивая иницциализация. Не пишем в onViewCreated
     // ! чтобы передать параметры в конструктор viewModel - нужно создать viewModelFactory
+
+    private val viewModelFactory by lazy {
+        GameViewModelFactory(requireActivity().application, args.level)
+    }
+
     private val viewModel: GameViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
     }
 
+    /*
     private val tvOptions by lazy {
         mutableListOf<TextView>().apply {
             with(binding) {
@@ -45,13 +45,13 @@ class GameFragment : Fragment() {
                 add(tvOption6)
             }
         }
-    }
+    }*/
 
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null")
 
-    companion object {
+  /*  companion object {
         const val NAME = "GameFragment"
         const val KEY_LEVEL = "level"
         // вместо newInstance используются safeargs для передачи данных
@@ -64,21 +64,21 @@ class GameFragment : Fragment() {
                 }
             }
         }
-    }
+    } */
 
-    // удаляем , navigate
+/*      удаляем , используем - navigate
 //    private fun parseArgs() {
 ////        level = requireArguments().getSerializable(KEY_LEVEL) as Level
 //        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
 //            level = it
 //        }
 //    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // удаляем , navigate
-//        parseArgs()
-    }
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        // удаляем , navigate
+////        parseArgs()
+//    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,13 +91,16 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         // запуск обсервера ViewModel и слушателей нажатия варианта ответа
         observeViewModel()
-        setClickListenersToOptions()
+        //setClickListenersToOptions()
         // запуск startGame из viewModel
 //        viewModel.startGame(level)    // убрали
     }
-
+/*
     private fun setClickListenersToOptions() {
         // слушание списка кнопок - вариантов ответа
         for (tvOption in tvOptions) {
@@ -106,10 +109,10 @@ class GameFragment : Fragment() {
                 viewModel.chooseAnswer(tvOption.text.toString().toInt())
             }
         }
-    }
+    }*/
 
     private fun observeViewModel() {
-        with(binding) {
+            /*
             // LiveData question
             viewModel.question.observe(viewLifecycleOwner) {
                 tvSum.text = it.sum.toString()
@@ -117,41 +120,44 @@ class GameFragment : Fragment() {
                 for (i in 0 until tvOptions.size) {
                     tvOptions[i].text = it.options[i].toString()
                 }
-            }
+            }*/
+            /*
+
+
             // LiveData percentOfRightAnswers
-            viewModel.percentOfRightAnswers.observe(viewLifecycleOwner) {
-                progressBar.setProgress(it)
-            }
+//            viewModel.percentOfRightAnswers.observe(viewLifecycleOwner) {
+//                progressBar.setProgress(it)
+//            }
             // LiveData enoughCountOfRightAnswers
-            viewModel.enoughCountOfRightAnswers.observe(viewLifecycleOwner) {
-                tvAnswersProgress.setTextColor(getColorByState(it))
-            }
+//            viewModel.enoughCountOfRightAnswers.observe(viewLifecycleOwner) {
+//                tvAnswersProgress.setTextColor(getColorByState(it))
+//            }
             // LiveData enoughCountOfRightAnswers
-            viewModel.enoughPercentOfRightAnswers.observe(viewLifecycleOwner) {
-                val color = getColorByState(it)
-                // установвка цвета у progressBar
-                progressBar.progressTintList = ColorStateList.valueOf(color)
-            }
+//            viewModel.enoughPercentOfRightAnswers.observe(viewLifecycleOwner) {
+//                val color = getColorByState(it)
+//                // установвка цвета у progressBar
+//                progressBar.progressTintList = ColorStateList.valueOf(color)
+//            }
             // LiveData formattedTime
-            viewModel.formattedTime.observe(viewLifecycleOwner) {
-                tvTimer.text = it
-            }
+//            viewModel.formattedTime.observe(viewLifecycleOwner) {
+//                tvTimer.text = it
+//            }
             // LiveData minPercent
-            viewModel.minPercent.observe(viewLifecycleOwner) {
-                progressBar.secondaryProgress = it
-            }
+//            viewModel.minPercent.observe(viewLifecycleOwner) {
+//                progressBar.secondaryProgress = it
+//            }
             // LiveData gameResult
+
+            // LiveData gameResult
+//            viewModel.progressAnswers.observe(viewLifecycleOwner) {
+//                tvAnswersProgress.text = it
+//            }
+            */
             viewModel.gameResult.observe(viewLifecycleOwner) {
                 launchGameFinishedFragment(it)
             }
-            // LiveData gameResult
-            viewModel.progressAnswers.observe(viewLifecycleOwner) {
-                tvAnswersProgress.text = it
-            }
-
-        }
     }
-
+/*
     private fun getColorByState(goodState: Boolean): Int {
         val colorResId = if(goodState) {
             android.R.color.holo_green_light
@@ -159,7 +165,7 @@ class GameFragment : Fragment() {
             android.R.color.holo_red_dark
         }
         return ContextCompat.getColor(requireContext(), colorResId)
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -167,16 +173,25 @@ class GameFragment : Fragment() {
     }
 
     private fun launchGameFinishedFragment(gameResult: GameResult) {
+        /*
+        // 1 вариант передачи параметров через GameFragment.newInstance(level)
 //        requireActivity().supportFragmentManager.beginTransaction()
 //            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
 //            .addToBackStack(null)
 //            .commit()
+
+        //       2 вариант передачи параметров через safeargs
         // поменяли. на navigate
         // Для передачи gameResult используем args = Bundle()
-        val args = Bundle().apply {
-            putParcelable(GameFinishedFragment.KEY_GAME_RESULT, gameResult)
-        }
-        findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, args)
+//        val args = Bundle().apply {
+//            putParcelable(GameFinishedFragment.KEY_GAME_RESULT, gameResult)
+//        }
+
+//        3 вариант передачи параметров через navController
+        */
+        findNavController().navigate(
+            GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult)
+        )
     }
 
 }

@@ -42,5 +42,9 @@
         android:id="@+id/gameFinishedFragment"
         android:name="ru.uspehovmax.composition.presentation.GameFinishedFragment"
         android:label="fragment_game_finished"
-        tools:layout="@layout/fragment_game_finished" />
+        tools:layout="@layout/fragment_game_finished" >
+        <argument
+            android:name="gameResult"
+            app:argType="ru.uspehovmax.composition.domain.entity.GameResult" />
+    </fragment>
 </navigation>

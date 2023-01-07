@@ -3,7 +3,6 @@ package ru.uspehovmax.composition.presentation
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import ru.uspehovmax.composition.domain.entity.Level
 
 /**

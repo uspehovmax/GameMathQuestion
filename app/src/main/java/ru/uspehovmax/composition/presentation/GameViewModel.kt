@@ -1,9 +1,7 @@
 package ru.uspehovmax.composition.presentation
 
 import android.app.Application
-import android.content.Intent
 import android.os.CountDownTimer
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -80,7 +78,7 @@ class GameViewModel(
 
     // сделали private, удалили параметр level:Level из startGame(), все идет из К. GameViewModel
     private fun startGame() {
-        getGameSettings(    )
+        getGameSettings()
         startTimer()
         generateQuestion()
         updateProgress()
@@ -98,10 +96,9 @@ class GameViewModel(
         _progressAnswers.value = String.format(
             application.resources.getString(R.string.progress_answers),
             countOfRightAnswers,
-            gameSettings.minCountOofRightAnswers
+            gameSettings.minCountOfRightAnswers
         )
-        _enoughCountOfRightAnswers.value =
-            countOfRightAnswers >= gameSettings.minCountOofRightAnswers
+        _enoughCountOfRightAnswers.value = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
         _enoughPercentOfRightAnswers.value = percent >= gameSettings.minPercentOfRightAnswers
 
     }

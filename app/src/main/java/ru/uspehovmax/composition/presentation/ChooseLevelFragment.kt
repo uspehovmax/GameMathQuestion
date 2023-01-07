@@ -16,19 +16,14 @@ class ChooseLevelFragment : Fragment() {
     private val binding: FragmentChooseLevelBinding
         get() = _binding ?: throw RuntimeException("FragmentChooseLevelBinding == null")
 
-    companion object {
+ /*   companion object {
         const val NAME = "ChooseLevelFragment"
 
         // вместо newInstance используются safeargs для передачи данных
         fun newInstance(): ChooseLevelFragment {
             return ChooseLevelFragment()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    } */
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,23 +57,25 @@ class ChooseLevelFragment : Fragment() {
     }
 
     private fun launchGameFragment(level: Level) {
+        // 1 вариант передачи параметров через GameFragment.newInstance(level)
 //        requireActivity().supportFragmentManager.beginTransaction()
 //            .replace(R.id.main_container, GameFragment.newInstance(level))
 //            .addToBackStack(GameFragment.NAME)
 //            .commit()
+
+//       2 вариант передачи параметров через safeargs
         // поменяли. на navigate
         // Для передачи level используем args = Bundle()
 //        val args = Bundle().apply {
 //            putParcelable(GameFragment.KEY_LEVEL, level)
 //        }
-//          передача арргументов через safeargs
 //        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment, args)
+//        3 вариант передачи параметров через navController
         findNavController().navigate(
             ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(
                 level
             )
         )
-
     }
 
     override fun onDestroyView() {
